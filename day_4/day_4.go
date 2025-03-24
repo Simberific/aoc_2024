@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"log"
 	"os"
@@ -17,7 +18,10 @@ func main() {
 	scanner := bufio.NewScanner(file)
 
 	topMap := inputToMap(scanner)
-	fmt.Println(topMap)
+	fmt.Println("TopMap length: ", len(topMap))
+
+	count := countHorizontalXmases(topMap)
+	fmt.Println(count)
 }
 
 func inputToMap(scanner *bufio.Scanner) map[int]map[int]byte {
@@ -32,6 +36,28 @@ func inputToMap(scanner *bufio.Scanner) map[int]map[int]byte {
 			lineMap[j] = line[j]
 		}
 		topMap[i] = lineMap
+		i++
 	}
 	return topMap
+}
+
+func countChristmases() {}
+
+func countHorizontalXmases(topMap map[int]map[int]byte) int {
+	count := 0
+	for i, line := range topMap {
+		for j := 0; j < len(line)-3; j++ {
+			arr := []byte{line[j], line[j+1], line[j+2], line[j+3]}
+			if isXmas(arr) {
+				fmt.Println("Found an Xmas in Line ", i)
+				count++
+			}
+		}
+	}
+	return count
+}
+
+func isXmas(arr []byte) bool {
+	xmas := []byte("XMAS")
+	return bytes.Equal(xmas, arr)
 }
