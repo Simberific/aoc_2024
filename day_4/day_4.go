@@ -42,7 +42,7 @@ func inputToMap(scanner *bufio.Scanner) map[int]map[int]byte {
 }
 
 func countChristmases(topMap map[int]map[int]byte) int {
-	return countHorizontalXmases(topMap) + countVerticalXmases(topMap)
+	return countHorizontalXmases(topMap) + countVerticalXmases(topMap) + countForwardDiagonalXmases(topMap) + countBackwardDiagonalXmases(topMap)
 }
 
 func countHorizontalXmases(topMap map[int]map[int]byte) int {
@@ -72,6 +72,47 @@ func countVerticalXmases(topMap map[int]map[int]byte) int {
 			}
 			if isXmas(arr) {
 				fmt.Println("Found an Xmas in Column ", columnIndex)
+				count++
+			}
+		}
+	}
+
+	return count
+}
+
+func countForwardDiagonalXmases(topMap map[int]map[int]byte) int {
+	count := 0
+	for columnIndex := 0; columnIndex < len(topMap[0])-3; columnIndex++ {
+		// Look below me to grab the 4 vertically stacking bytes until I can't anymore.
+		for rowIndex := 0; rowIndex < len(topMap)-3; rowIndex++ {
+			arr := []byte{
+				topMap[rowIndex][columnIndex],
+				topMap[rowIndex+1][columnIndex+1],
+				topMap[rowIndex+2][columnIndex+2],
+				topMap[rowIndex+3][columnIndex+3],
+			}
+			if isXmas(arr) {
+				fmt.Println("Found a forwards Diagonal Xmas starting in Column", columnIndex)
+				count++
+			}
+		}
+	}
+	return count
+}
+
+func countBackwardDiagonalXmases(topMap map[int]map[int]byte) int {
+	count := 0
+	for columnIndex := 3; columnIndex < len(topMap[0]); columnIndex++ {
+		// Look below me to grab the 4 vertically stacking bytes until I can't anymore.
+		for rowIndex := 0; rowIndex < len(topMap)-3; rowIndex++ {
+			arr := []byte{
+				topMap[rowIndex][columnIndex],
+				topMap[rowIndex+1][columnIndex-1],
+				topMap[rowIndex+2][columnIndex-2],
+				topMap[rowIndex+3][columnIndex-3],
+			}
+			if isXmas(arr) {
+				fmt.Println("Found a forwards Diagonal Xmas starting in Column", columnIndex)
 				count++
 			}
 		}
