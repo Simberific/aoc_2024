@@ -20,7 +20,7 @@ func main() {
 	topMap := inputToMap(scanner)
 	fmt.Println("TopMap length: ", len(topMap))
 
-	count := countHorizontalXmases(topMap)
+	count := countChristmases(topMap)
 	fmt.Println(count)
 }
 
@@ -41,7 +41,9 @@ func inputToMap(scanner *bufio.Scanner) map[int]map[int]byte {
 	return topMap
 }
 
-func countChristmases() {}
+func countChristmases(topMap map[int]map[int]byte) int {
+	return countHorizontalXmases(topMap) + countVerticalXmases(topMap)
+}
 
 func countHorizontalXmases(topMap map[int]map[int]byte) int {
 	count := 0
@@ -49,7 +51,7 @@ func countHorizontalXmases(topMap map[int]map[int]byte) int {
 		for j := 0; j < len(line)-3; j++ {
 			arr := []byte{line[j], line[j+1], line[j+2], line[j+3]}
 			if isXmas(arr) {
-				fmt.Println("Found an Xmas in Line ", i)
+				fmt.Println("Found an Xmas in Row ", i)
 				count++
 			}
 		}
@@ -57,7 +59,29 @@ func countHorizontalXmases(topMap map[int]map[int]byte) int {
 	return count
 }
 
+func countVerticalXmases(topMap map[int]map[int]byte) int {
+	count := 0
+	for columnIndex := 0; columnIndex < len(topMap[0]); columnIndex++ {
+		// Look below me to grab the 4 vertically stacking bytes until I can't anymore.
+		for rowIndex := 0; rowIndex < len(topMap)-3; rowIndex++ {
+			arr := []byte{
+				topMap[rowIndex][columnIndex],
+				topMap[rowIndex+1][columnIndex],
+				topMap[rowIndex+2][columnIndex],
+				topMap[rowIndex+3][columnIndex],
+			}
+			if isXmas(arr) {
+				fmt.Println("Found an Xmas in Column ", columnIndex)
+				count++
+			}
+		}
+	}
+
+	return count
+}
+
 func isXmas(arr []byte) bool {
 	xmas := []byte("XMAS")
-	return bytes.Equal(xmas, arr)
+	samx := []byte("SAMX")
+	return bytes.Equal(xmas, arr) || bytes.Equal(samx, arr)
 }
